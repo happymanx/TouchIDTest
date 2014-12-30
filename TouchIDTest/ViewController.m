@@ -31,16 +31,6 @@
                 localizedReason:@"Are you the device owner?"
                           reply:^(BOOL success, NSError *error) {
                               
-                              if (error) {
-                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                                  message:@"There was a problem verifying your identity."
-                                                                                 delegate:nil
-                                                                        cancelButtonTitle:@"Ok"
-                                                                        otherButtonTitles:nil];
-                                  [alert show];
-                                  return;
-                              }
-                              
                               if (success) {
                                   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success"
                                                                                   message:@"You are the device owner!"
@@ -50,14 +40,26 @@
                                   [alert show];
                                   
                               } else {
-                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                                  message:@"You are not the device owner."
-                                                                                 delegate:nil
-                                                                        cancelButtonTitle:@"Ok"
-                                                                        otherButtonTitles:nil];
-                                  [alert show];
+                                  if (error.code == kLAErrorUserCancel) {
+                                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cancel"
+                                                                                      message:@"You Cancel."
+                                                                                     delegate:nil
+                                                                            cancelButtonTitle:@"Ok"
+                                                                            otherButtonTitles:nil];
+                                      [alert show];
+                                  } else if (error.code == kLAErrorUserFallback) {
+                                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Fallback"
+                                                                                      message:@"You Fallback."
+                                                                                     delegate:nil
+                                                                            cancelButtonTitle:@"Ok"
+                                                                            otherButtonTitles:nil];
+                                      [alert show];
+                                  }
+                                  else {
+                                      // other case
+                                  }
+
                               }
-                              
                           }];
         
     } else {
